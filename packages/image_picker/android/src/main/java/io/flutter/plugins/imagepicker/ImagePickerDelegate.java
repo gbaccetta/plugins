@@ -197,8 +197,8 @@ public class ImagePickerDelegate
 
   private void launchPickImageFromGalleryIntent() {
     Intent pickImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+    pickImageIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
     pickImageIntent.setType("image/*");
-    pickImageIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
     activity.startActivityForResult(pickImageIntent, REQUEST_CODE_CHOOSE_FROM_GALLERY);
   }
 
@@ -328,11 +328,16 @@ public class ImagePickerDelegate
 
   private void handleResult(String path) {
     if (pendingResult != null) {
-      Double maxWidth = methodCall.argument("maxWidth");
-      Double maxHeight = methodCall.argument("maxHeight");
+      android.util.Log.d("imagePicker", "handleResult: path is : " + path);
+      if (path!=null){
+        Double maxWidth = methodCall.argument("maxWidth");
+        Double maxHeight = methodCall.argument("maxHeight");
 
-      String finalImagePath = imageResizer.resizeImageIfNeeded(path, maxWidth, maxHeight);
-      finishWithSuccess(finalImagePath);
+        String finalImagePath = imageResizer.resizeImageIfNeeded(path, maxWidth, maxHeight);
+        finishWithSuccess(finalImagePath);
+      } else {
+        finishWithError("path_null", "returned path was invalid");
+      }
     } else {
       throw new IllegalStateException("Received images from picker that were not requested");
     }
