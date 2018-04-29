@@ -197,8 +197,10 @@ public class ImagePickerDelegate
 
   private void launchPickImageFromGalleryIntent() {
     Intent pickImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+    //todo manage picking content from remote source
+    pickImageIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
     pickImageIntent.setType("image/*");
-
+    
     activity.startActivityForResult(pickImageIntent, REQUEST_CODE_CHOOSE_FROM_GALLERY);
   }
 
